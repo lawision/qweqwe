@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .no-data {
+            text-align: center;
+            font-size: 18px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sales History</h1>
+    <table id="salesHistoryTable">
+        <thead>
+            <tr>
+                <th>Buyer Name</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Total Amount</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Sales history rows will be dynamically added here -->
+        </tbody>
+    </table>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentUser = localStorage.getItem("currentUser"); // Replace this with your logic to fetch the logged-in user
+            const salesHistoryKey = currentUser + "_salesHistory";
+            const salesHistory = JSON.parse(localStorage.getItem(salesHistoryKey)) || [];
+
+            const tableBody = document.getElementById("salesHistoryTable").querySelector("tbody");
+
+            if (salesHistory.length === 0) {
+                // Show a message when no sales history is found
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 7;
+                cell.className = "no-data";
+                cell.textContent = "No sales history found.";
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+                return;
+            }
+
+            // Populate the sales history into the table
+            salesHistory.forEach(sale => {
+                const row = document.createElement("tr");
+
+                const buyerNameCell = document.createElement("td");
+                buyerNameCell.textContent = sale.buyer;
+                row.appendChild(buyerNameCell);
+
+                const contactCell = document.createElement("td");
+                contactCell.textContent = sale.contact;
+                row.appendChild(contactCell);
+
+                const addressCell = document.createElement("td");
+                addressCell.textContent = sale.address;
+                row.appendChild(addressCell);
+
+                const productNameCell = document.createElement("td");
+                productNameCell.textContent = sale.productName;
+                row.appendChild(productNameCell);
+
+                const quantityCell = document.createElement("td");
+                quantityCell.textContent = sale.quantity;
+                row.appendChild(quantityCell);
+
+                const totalAmountCell = document.createElement("td");
+                totalAmountCell.textContent = `₱${sale.totalAmount}`;
+                row.appendChild(totalAmountCell);
+
+                const dateCell = document.createElement("td");
+                dateCell.textContent = sale.date;
+                row.appendChild(dateCell);
+
+                tableBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
